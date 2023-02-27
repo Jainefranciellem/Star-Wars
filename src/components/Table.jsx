@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import PlanetsContext from '../context/PlanetsContext';
 
 export default function Table() {
-  const { apiData } = useContext(PlanetsContext);
+  const { search, apiData, loading } = useContext(PlanetsContext);
+
   return (
     <section>
       <table>
@@ -23,36 +24,39 @@ export default function Table() {
             <th>URL</th>
           </tr>
         </thead>
+        { loading && <h1>...loading</h1> }
         <tbody>
-          {apiData.map((planet) => (
-            <tr
-              key={ planet.name }
-            >
-              <td>
-                { planet.name }
-              </td>
-              <td>{ planet.rotation_period }</td>
-              <td>{ planet.orbital_period }</td>
-              <td>{ planet.diameter }</td>
-              <td>{ planet.climate }</td>
-              <td>{ planet.gravity }</td>
-              <td>{ planet.terrain }</td>
-              <td>{ planet.surface_water }</td>
-              <td>{ planet.population }</td>
-              <td>
-                {planet.films.map((url, index) => (
-                  <span key={ index }>
-                    <a href={ url }>{ url }</a>
-                  </span>
-                ))}
-              </td>
-              <td>{ planet.created }</td>
-              <td>{ planet.edited }</td>
-              <td>
-                <a href={ planet.url }>{ planet.url }</a>
-              </td>
-            </tr>
-          ))}
+          {apiData
+            .filter((searchPlanet) => searchPlanet.name.includes(search.toLowerCase()))
+            .map((planet) => (
+              <tr
+                key={ planet.name }
+              >
+                <td>
+                  { planet.name }
+                </td>
+                <td>{ planet.rotation_period }</td>
+                <td>{ planet.orbital_period }</td>
+                <td>{ planet.diameter }</td>
+                <td>{ planet.climate }</td>
+                <td>{ planet.gravity }</td>
+                <td>{ planet.terrain }</td>
+                <td>{ planet.surface_water }</td>
+                <td>{ planet.population }</td>
+                <td>
+                  {planet.films.map((url, index) => (
+                    <span key={ index }>
+                      <a href={ url }>{ url }</a>
+                    </span>
+                  ))}
+                </td>
+                <td>{ planet.created }</td>
+                <td>{ planet.edited }</td>
+                <td>
+                  <a href={ planet.url }>{ planet.url }</a>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </section>

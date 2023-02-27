@@ -4,6 +4,8 @@ import PlanetsContext from './PlanetsContext';
 
 function PlanetsProvider({ children }) {
   const [apiData, setApiData] = useState([]);
+  const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const clearResults = (results) => {
     const newResults = results.map((result) => {
@@ -25,6 +27,7 @@ function PlanetsProvider({ children }) {
         const data = await response.json();
         const { results } = data;
         setApiData(clearResults(results));
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -35,7 +38,10 @@ function PlanetsProvider({ children }) {
   const value = useMemo(() => ({
     apiData,
     setApiData,
-  }), [apiData]);
+    search,
+    setSearch,
+    loading,
+  }), [apiData, search, loading]);
 
   return (
     <PlanetsContext.Provider value={ value }>
