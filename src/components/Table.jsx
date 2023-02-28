@@ -24,8 +24,8 @@ export default function Table() {
             <th>URL</th>
           </tr>
         </thead>
-        { loading && <h1>...loading</h1> }
         <tbody>
+          { loading && <tr><td>...loading</td></tr> }
           {apiData
             .filter((searchPlanet) => searchPlanet.name.includes(search.toLowerCase()))
             .map((planet) => (

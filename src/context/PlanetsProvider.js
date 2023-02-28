@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useState } from 'react';
 import PlanetsContext from './PlanetsContext';
+import fetchAPI from '../services/requestApi';
 
 function PlanetsProvider({ children }) {
   const [apiData, setApiData] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [filteredNumber, setFilteredNumber] = useState([]);
 
   const clearResults = (results) => {
     const newResults = results.map((result) => {
@@ -17,22 +19,13 @@ function PlanetsProvider({ children }) {
   };
 
   useEffect(() => {
-    const fetchAPI = async () => {
-      try {
-        const response = await fetch('https://swapi.dev/api/planets');
-        if (!response.ok) {
-          const data = await response.json();
-          throw data.message;
-        }
-        const data = await response.json();
-        const { results } = data;
+    fetchAPI('https://swapi.dev/api/planets/')
+      .then((data) => {
+        const results = data;
         setApiData(clearResults(results));
         setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchAPI();
+        setFilteredNumber(clearResults(results));
+      });
   }, []);
 
   const value = useMemo(() => ({
@@ -41,7 +34,9 @@ function PlanetsProvider({ children }) {
     search,
     setSearch,
     loading,
-  }), [apiData, search, loading]);
+    filteredNumber,
+    setFilteredNumber,
+  }), [apiData, search, loading, filteredNumber]);
 
   return (
     <PlanetsContext.Provider value={ value }>
