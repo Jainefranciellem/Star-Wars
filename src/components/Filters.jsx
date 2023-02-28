@@ -7,11 +7,14 @@ export default function Filters() {
     comparision: 'maior que',
     value: '0',
   });
+  const [options, setOptions] = useState([
+    'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water',
+  ]);
+
   const { apiData, setApiData } = useContext(planetsContext);
 
   const filterByNumber = (planetsFilter, filter) => {
     const { column, comparision, value } = filter;
-    console.log(comparision);
     if (comparision === 'maior que') {
       return planetsFilter.filter((planet) => Number(planet[column]) > Number(value));
     }
@@ -23,6 +26,9 @@ export default function Filters() {
 
   const handleClick = (filter) => {
     setApiData(filterByNumber(apiData, filter));
+    const filterOptions = options.filter((option) => option !== filter.column);
+    setOptions(filterOptions);
+    setFilters({ ...filters, column: filterOptions[0] });
   };
 
   return (
@@ -33,11 +39,11 @@ export default function Filters() {
         data-testid="column-filter"
         onChange={ ({ target }) => setFilters({ ...filters, column: target.value }) }
       >
-        <option value="population">population</option>
-        <option value="orbital_period">orbital_period</option>
-        <option value="diameter">diameter</option>
-        <option value="rotation_period">rotation_period</option>
-        <option value="surface_water">surface_water</option>
+        {
+          options.map((element) => (
+            <option key={ element } value={ element }>{element}</option>
+          ))
+        }
       </select>
       <select
         id="comparisonFilter"
