@@ -2,7 +2,23 @@ import React, { useContext } from 'react';
 import PlanetsContext from '../context/PlanetsContext';
 
 export default function Table() {
-  const { search, apiData, loading } = useContext(PlanetsContext);
+  const { search, loading, filtersList, apiData } = useContext(PlanetsContext);
+
+  const filterByNumber = (planetsFilter, filter) => {
+    const { column, comparision, value } = filter;
+    if (comparision === 'maior que') {
+      return planetsFilter.filter((planet) => Number(planet[column]) > Number(value));
+    }
+    if (comparision === 'menor que') {
+      return planetsFilter.filter((planet) => Number(planet[column]) < Number(value));
+    }
+    return planetsFilter.filter((planet) => Number(planet[column]) === Number(value));
+  };
+
+  let arrayfiltered = apiData;
+  filtersList.forEach((filter) => {
+    arrayfiltered = filterByNumber(arrayfiltered, filter);
+  });
 
   return (
     <section>
@@ -26,7 +42,7 @@ export default function Table() {
         </thead>
         <tbody>
           { loading && <tr><td>...loading</td></tr> }
-          {apiData
+          {arrayfiltered
             .filter((searchPlanet) => searchPlanet.name.includes(search.toLowerCase()))
             .map((planet) => (
               <tr

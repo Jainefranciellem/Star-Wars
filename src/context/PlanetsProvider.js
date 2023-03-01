@@ -4,6 +4,7 @@ import PlanetsContext from './PlanetsContext';
 import fetchAPI from '../services/requestApi';
 
 function PlanetsProvider({ children }) {
+  const [filtersList, setFiltersList] = useState([]);
   const [apiData, setApiData] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
@@ -36,7 +37,9 @@ function PlanetsProvider({ children }) {
     loading,
     filteredNumber,
     setFilteredNumber,
-  }), [apiData, search, loading, filteredNumber]);
+    filtersList,
+    setFiltersList,
+  }), [apiData, search, loading, filteredNumber, filtersList]);
 
   return (
     <PlanetsContext.Provider value={ value }>

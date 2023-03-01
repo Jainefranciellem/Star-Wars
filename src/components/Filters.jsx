@@ -11,24 +11,19 @@ export default function Filters() {
     'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water',
   ]);
 
-  const { apiData, setApiData } = useContext(planetsContext);
+  const { apiData, setFilteredNumber, setFiltersList,
+    filtersList } = useContext(planetsContext);
 
-  const filterByNumber = (planetsFilter, filter) => {
-    const { column, comparision, value } = filter;
-    if (comparision === 'maior que') {
-      return planetsFilter.filter((planet) => Number(planet[column]) > Number(value));
-    }
-    if (comparision === 'menor que') {
-      return planetsFilter.filter((planet) => Number(planet[column]) < Number(value));
-    }
-    return planetsFilter.filter((planet) => Number(planet[column]) === Number(value));
-  };
-
-  const handleClick = (filter) => {
-    setApiData(filterByNumber(apiData, filter));
-    const filterOptions = options.filter((option) => option !== filter.column);
+  const handleClick = () => {
+    const filterOptions = options.filter((option) => option !== filters.column);
     setOptions(filterOptions);
     setFilters({ ...filters, column: filterOptions[0] });
+    setFiltersList([...filtersList, filters]);
+  };
+
+  const handleRemove = () => {
+    setFiltersList([]);
+    setFilteredNumber(apiData);
   };
 
   return (
@@ -64,9 +59,16 @@ export default function Filters() {
       <button
         type="number"
         data-testid="button-filter"
-        onClick={ () => handleClick(filters) }
+        onClick={ handleClick }
       >
         Adicionar
+      </button>
+      <button
+        type="number"
+        data-testid="button-remove-filters"
+        onClick={ handleRemove }
+      >
+        remover filtros
       </button>
     </div>
   );
