@@ -9,12 +9,11 @@ function PlanetsProvider({ children }) {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [filteredNumber, setFilteredNumber] = useState([]);
-  const [sorterd, setSorterd] = useState('');
   const [filters, setFilters] = useState({
     column: 'population',
     comparision: 'maior que',
     value: 0,
-    order: { column: 'population', sort: 'ASC' },
+    order: { column: 'population', sort: '' },
   });
 
   const clearResults = (results) => {
@@ -46,11 +45,9 @@ function PlanetsProvider({ children }) {
     setFilteredNumber,
     filtersList,
     setFiltersList,
-    sorterd,
-    setSorterd,
     filters,
     setFilters,
-  }), [apiData, search, loading, filteredNumber, filtersList, sorterd, filters]);
+  }), [apiData, search, loading, filteredNumber, filtersList, filters]);
 
   return (
     <PlanetsContext.Provider value={ value }>

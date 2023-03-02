@@ -5,6 +5,9 @@ export default function Filters() {
   const [options, setOptions] = useState([
     'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water',
   ]);
+  const [sorterd, setSorterd] = useState({
+    order: { column: 'population', sort: 'ASC' },
+  });
 
   const { apiData, setFilteredNumber, setFiltersList,
     filtersList, filters, setFilters } = useContext(planetsContext);
@@ -60,9 +63,9 @@ export default function Filters() {
       </button>
       <select
         id="ordenar"
-        value={ filters.order.column }
-        onChange={ ({ target }) => setFilters({
-          ...filters, order: { column: target.value } }) }
+        data-testid="column-sort"
+        value={ sorterd.order.column }
+        onChange={ ({ target }) => setSorterd({ order: { column: target.value } }) }
       >
         <option value="population">population</option>
         <option value="orbital_period">orbital_period</option>
@@ -78,8 +81,8 @@ export default function Filters() {
         name="order"
         data-testid="column-sort-input-asc"
         onChange={ ({ target }) => {
-          setFilters(
-            { ...filters, order: { column: filters.order.column, sort: target.value } },
+          setSorterd(
+            { order: { column: sorterd.order.column, sort: target.value } },
           );
         } }
       />
@@ -91,22 +94,15 @@ export default function Filters() {
         name="order"
         data-testid="column-sort-input-desc"
         onChange={ ({ target }) => {
-          setFilters(
-            { ...filters, order: { column: filters.order.column, sort: target.value } },
+          setSorterd(
+            { order: { column: sorterd.order.column, sort: target.value } },
           );
         } }
       />
       <button
         type="button"
         data-testid="column-sort-button"
-        onClick={ () => {
-          setFilters(
-            {
-              ...filters,
-              order: { column: filters.order.column, sort: filters.order.sort },
-            },
-          );
-        } }
+        onClick={ () => setFilters({ ...filters, ...sorterd }) }
       >
         Ordenar
       </button>

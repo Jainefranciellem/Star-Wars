@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import PlanetsContext from '../context/PlanetsContext';
 
 export default function Table() {
-  const { search, loading, filtersList, apiData, filters } = useContext(PlanetsContext);
+  const { search, loading, filtersList,
+    apiData, filters } = useContext(PlanetsContext);
   let arrayfiltered = apiData;
 
   const filterByNumber = (planetsFilter, filter) => {
@@ -16,20 +17,24 @@ export default function Table() {
     return planetsFilter.filter((planet) => Number(planet[column]) === Number(value));
   };
 
-  const orderData = () => arrayfiltered.sort((a, b) => {
-    if (filters.order.sort === 'ASC') {
-      return Number(a[filters.order.column])
-      - Number(b[filters.order.column]);
+  const magicNumber = -1;
+  arrayfiltered.sort((a, b) => {
+    if (b[filters.order.column] === 'unknown') {
+      return magicNumber;
     }
-    return Number(b[filters.order.column])
-    - Number(a[filters.order.column]);
+    if (filters.order.sort === 'ASC') {
+      return Number(a[filters.order.column]) - Number(b[filters.order.column]);
+    }
+    if (filters.order.sort === 'DESC') {
+      return Number(b[filters.order.column]) - Number(a[filters.order.column]);
+    }
+    return 0;
   });
 
   filtersList.forEach((filter) => {
     arrayfiltered = filterByNumber(arrayfiltered, filter);
   });
 
-  orderData();
   return (
     <section>
       <table>
@@ -58,7 +63,7 @@ export default function Table() {
               <tr
                 key={ planet.name }
               >
-                <td>
+                <td data-testid="planet-name">
                   { planet.name }
                 </td>
                 <td>{ planet.rotation_period }</td>
