@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import PlanetsContext from '../context/PlanetsContext';
 
 export default function Table() {
-  const { search, loading, filtersList, apiData } = useContext(PlanetsContext);
+  const { search, loading, filtersList, apiData, filters } = useContext(PlanetsContext);
+  let arrayfiltered = apiData;
 
   const filterByNumber = (planetsFilter, filter) => {
     const { column, comparision, value } = filter;
@@ -15,11 +16,20 @@ export default function Table() {
     return planetsFilter.filter((planet) => Number(planet[column]) === Number(value));
   };
 
-  let arrayfiltered = apiData;
+  const orderData = () => arrayfiltered.sort((a, b) => {
+    if (filters.order.sort === 'ASC') {
+      return Number(a[filters.order.column])
+      - Number(b[filters.order.column]);
+    }
+    return Number(b[filters.order.column])
+    - Number(a[filters.order.column]);
+  });
+
   filtersList.forEach((filter) => {
     arrayfiltered = filterByNumber(arrayfiltered, filter);
   });
 
+  orderData();
   return (
     <section>
       <table>

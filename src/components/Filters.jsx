@@ -2,17 +2,12 @@ import { useContext, useState } from 'react';
 import planetsContext from '../context/PlanetsContext';
 
 export default function Filters() {
-  const [filters, setFilters] = useState({
-    column: 'population',
-    comparision: 'maior que',
-    value: '0',
-  });
   const [options, setOptions] = useState([
     'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water',
   ]);
 
   const { apiData, setFilteredNumber, setFiltersList,
-    filtersList } = useContext(planetsContext);
+    filtersList, filters, setFilters } = useContext(planetsContext);
 
   const handleClick = () => {
     const filterOptions = options.filter((option) => option !== filters.column);
@@ -61,14 +56,66 @@ export default function Filters() {
         data-testid="button-filter"
         onClick={ handleClick }
       >
-        Adicionar
+        Filtrar
+      </button>
+      <select
+        id="ordenar"
+        value={ filters.order.column }
+        onChange={ ({ target }) => setFilters({
+          ...filters, order: { column: target.value } }) }
+      >
+        <option value="population">population</option>
+        <option value="orbital_period">orbital_period</option>
+        <option value="diameter">diameter</option>
+        <option value="rotation_period">rotation_period</option>
+        <option value="surface_water">surface_water</option>
+      </select>
+      ASC
+      <input
+        type="radio"
+        id="ASC"
+        value="ASC"
+        name="order"
+        data-testid="column-sort-input-asc"
+        onChange={ ({ target }) => {
+          setFilters(
+            { ...filters, order: { column: filters.order.column, sort: target.value } },
+          );
+        } }
+      />
+      DESC
+      <input
+        type="radio"
+        id="DESC"
+        value="DESC"
+        name="order"
+        data-testid="column-sort-input-desc"
+        onChange={ ({ target }) => {
+          setFilters(
+            { ...filters, order: { column: filters.order.column, sort: target.value } },
+          );
+        } }
+      />
+      <button
+        type="button"
+        data-testid="column-sort-button"
+        onClick={ () => {
+          setFilters(
+            {
+              ...filters,
+              order: { column: filters.order.column, sort: filters.order.sort },
+            },
+          );
+        } }
+      >
+        Ordenar
       </button>
       <button
         type="number"
         data-testid="button-remove-filters"
         onClick={ handleRemove }
       >
-        remover filtros
+        Remover filtros
       </button>
     </div>
   );
